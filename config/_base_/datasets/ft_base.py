@@ -32,39 +32,42 @@ test_pipeline = [
         ])
 ]
 # classes splits are predefined in FewShotCocoDataset
+
+data_root = "datasets/NEU_DET/"
+annotations_root = "base/"
 data = dict(
     samples_per_gpu=1,
     workers_per_gpu=1,
     train=dict(
         type='FewShotDefectDataset',
         save_dataset=False,
-        data_root="./dataset/",
+        data_root=data_root,
         ann_cfg=[
             dict(
                 type='ann_file',
-                ann_file='data_split/trainval.txt')    
+                ann_file=annotations_root+'annotations/trainval.json')    
         ],
         img_prefix="images",
         pipeline=train_pipeline,
         classes="BASE_CLASSES_SPLIT1"),
     val=dict(
         type='FewShotDefectDataset',
-        data_root="./dataset/",
+        data_root=data_root,
         ann_cfg=[
             dict(
                 type='ann_file',
-                ann_file='data_split/test.txt')    
+                ann_file=annotations_root+'annotations/test.json')    
         ],
         img_prefix="images",
         pipeline=test_pipeline,
         classes="BASE_CLASSES_SPLIT1"),
     test=dict(
         type='FewShotDefectDataset',
-        data_root="./dataset/",
+        data_root=data_root,
         ann_cfg=[
             dict(
                 type='ann_file',
-                ann_file='data_split/test.txt')    
+                ann_file=annotations_root+'annotations/test.json')    
         ],
         img_prefix="images",
         pipeline=test_pipeline,

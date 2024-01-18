@@ -15,7 +15,7 @@ from mmdet.datasets.builder import DATASETS
 from mmdet.datasets.coco import CocoDataset
 from mmfewshot.detection.datasets.coco import FewShotCocoDataset
 from terminaltables import AsciiTable
-
+from mmdet.datasets.pipelines.transforms import Albu
 from .split import SPLIT
 import glob
 
@@ -30,7 +30,7 @@ class FewShotDefectDataset(FewShotCocoDataset):
                 test_mode: bool = False,
                 defect_name: Optional[str] = None, 
                 **kwargs) -> None:
-        
+        defect_name = "NEU_DET"
         self.SPLIT = SPLIT[defect_name]
         self.num_base_shots = num_base_shots
         self.num_novel_shots = num_novel_shots

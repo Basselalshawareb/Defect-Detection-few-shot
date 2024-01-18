@@ -1,4 +1,4 @@
-from mmdet.datasets.pipelines import RandomAffine
+from mmdet.datasets.pipelines import RandomAffine, Albu
 
 import copy
 import inspect
@@ -119,3 +119,93 @@ class QuadCopterView(RandomAffine):
                     raise NotImplementedError(
                         'RandomAffine only supports bbox.')
         return results
+
+
+def print_wrapper(fun):
+    def save_img(self,results):
+        
+        res = fun(self,results)
+        if self.img_id<10:
+            img = res['img']
+            mmcv.imwrite(img, f"augmented_images/{self.transforms[0]['type']}{self.img_id}.jpg")
+            self.img_id+=1
+        return res
+
+    return save_img
+
+@PIPELINES.register_module()
+class Albu_with_print(Albu):
+    def __init__(self,*args,**kwargs):
+        super().__init__(*args,**kwargs)
+        self.img_id = 0
+    
+    @print_wrapper
+    def __call__(self, results):
+        return super().__call__(results)
+
+    # def __call__(self, results):
+        
+    #     # dict to albumentations format
+    #     results = self.mapper(results, self.keymap_to_albu)
+    #     # TODO: add bbox_fields
+    #     if 'bboxes' in results:
+    #         # to list of boxes
+    #         if isinstance(results['bboxes'], np.ndarray):
+    #             results['bboxes'] = [x for x in results['bboxes']]
+    #         # add pseudo-field for filtration
+    #         if self.filter_lost_elements:
+    #             results['idx_mapper'] = np.arange(len(results['bboxes']))
+
+    #     # TODO: Support mask structure in albu
+    #     if 'masks' in results:
+    #         if isinstance(results['masks'], PolygonMasks):
+    #             raise NotImplementedError(
+    #                 'Albu only supports BitMap masks now')
+    #         ori_masks = results['masks']
+    #         if albumentations.__version__ < '0.5':
+    #             results['masks'] = results['masks'].masks
+    #         else:
+    #             results['masks'] = [mask for mask in results['masks'].masks]
+    #     results = self.aug(**results)
+
+    #     if 'bboxes' in results:
+    #         if isinstance(results['bboxes'], list):
+    #             results['bboxes'] = np.array(
+    #                 results['bboxes'], dtype=np.float32)
+    #         results['bboxes'] = results['bboxes'].reshape(-1, 4)
+
+    #         # filter label_fields
+    #         if self.filter_lost_elements:
+
+    #             for label in self.origin_label_fields:
+    #                 results[label] = np.array(
+    #                     [results[label][i] for i in results['idx_mapper']])
+    #             if 'masks' in results:
+    #                 results['masks'] = np.array(
+    #                     [results['masks'][i] for i in results['idx_mapper']])
+    #                 results['masks'] = ori_masks.__class__(
+    #                     results['masks'], results['image'].shape[0],
+    #                     results['image'].shape[1])
+
+    #             if (not len(results['idx_mapper'])
+    #                     and self.skip_img_without_anno):
+    #                 return None
+
+    #     if 'gt_labels' in results:
+    #         if isinstance(results['gt_labels'], list):
+    #             results['gt_labels'] = np.array(results['gt_labels'])
+    #         results['gt_labels'] = results['gt_labels'].astype(np.int64)
+
+    #     # back to the original format
+    #     results = self.mapper(results, self.keymap_back)
+
+    #     # update final shape
+    #     if self.update_pad_shape:
+    #         results['pad_shape'] = results['img'].shape
+    #     img = results['img']
+    #     mmcv.imwrite(img, f"augmented_images/{self.img_id}.jpg")
+    #     self.img_id+=1
+    #     return results
+    
+
+    
