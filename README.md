@@ -1,7 +1,7 @@
 
-This work is built on the repository https://github.com/Chan-Sun/IFSDD. Thanks for making it open source.
+This work is built on the repository https://github.com/Chan-Sun/IFSDD. Thanks for making it open source!
 
-##installation
+## installation
 
 1. Create conda environment
 
