@@ -1,11 +1,32 @@
+
+This work is built on the repository https://github.com/Chan-Sun/IFSDD. Thanks for making it open source.
+
 ##installation
 
+1. Create conda environment
 
+```shell
+conda create --name defect python=3.8 -y
+conda activate defect
+```
+
+2. Install `Pytorch` with cuda
+
+```shell
 pip install torch==1.9.0+cu111 torchvision==0.10.0+cu111 torchaudio==0.9.0 -f https://download.pytorch.org/whl/torch_stable.html
+```
+
+3. Install `MMCV` and `MMCLS`
+
+```shell
 pip install -U openmim
 mim install mmcv-full==1.4.6
 pip install mmcls==0.16
-pip install tensorboard
+```
+
+4. Build the source code of dowloaded packages and the current one
+
+```shell
 cd ./packages
 
 cd ./mmdetection
@@ -19,14 +40,17 @@ pip install -e .
 cd ../mmrazor
 pip install -r requirements.txt
 pip install -e .
+```
 
-cd ../.. lines 6 and 7
-go to /home/huemorgen/miniconda3/envs/defect/lib/python3.9/site-packages/torch/utils/tensorboard/__init__.py
-comment the following lines:
-# if not hasattr(tensorboard, '__version__') or LooseVersion(tensorboard.__version__) < LooseVersion('1.15'):
-#     raise ImportError('TensorBoard logging requires TensorBoard version 1.15 or above')
+5. (Optional) install tensorboard for monitoring training and testing
+
+```shell
+pip install tensorboard==1.15
+```
 
 To use Jupiter Notebook install the following package:
+```shell
 conda install -n defect ipykernel --update-deps --force-reinstall -y
+```
 
-In case pretrained ResNet cannot be found, copy the weights from folder ResNet weights and paste it in the hidden directory ~/.torch/models
+In case weights of ResNet are not found, copy the file ```weights/resnet101.pth``` to the hiddent directory ```~/.torch/models```
